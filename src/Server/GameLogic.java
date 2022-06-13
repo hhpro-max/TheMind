@@ -11,8 +11,10 @@ public class GameLogic {
     static int heartCard;
     static int ninjaCard;
     static boolean start = false;
+    static List<Integer> playedCards;
     GameLogic(){
         cards = new Stack<>();
+        playedCards = new ArrayList<>();
         initCards();
         levelCard = 1;
         heartCard = Server.clientHandlers.size();

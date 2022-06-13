@@ -13,7 +13,7 @@ public class Server {
     static int playersCount;
 
     public Server() {
-        playersCount = 50;
+        playersCount = 9;
         clientHandlers = new ArrayList<>();
         init();
     }
@@ -26,7 +26,6 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 addNewClientHandler(socket);
                 System.out.println("====> There are " + clientHandlers.size() + " clients on the server!");
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,7 +39,7 @@ public class Server {
             clientHandlers.add(clientHandler);
             new Thread(clientHandler).start();
             if (clientHandlers.size() == playersCount){
-                startGame();
+                ClientHandler.checkForStartTheGame();
             }
         } else {
             //todo replace client with bot
@@ -52,10 +51,8 @@ public class Server {
     public static void startGame() {
         GameLogic.start = true;
         new GameLogic();
-        for (ClientHandler c :
-                clientHandlers) {
-            c.sendInfo();
-        }
+
+        ClientHandler.sendInfoToAll();
     }
 
 

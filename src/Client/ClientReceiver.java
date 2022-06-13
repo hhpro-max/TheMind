@@ -16,7 +16,7 @@ public class ClientReceiver implements Runnable {
     public void run() {
         while (true) {
             String input = in.nextLine();
-            System.out.println("Message from server: " + input);
+            System.out.println("server : " + input);
         }
     }
 }
