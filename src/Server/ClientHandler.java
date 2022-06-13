@@ -49,8 +49,12 @@ public class ClientHandler implements Runnable {
                     out.println("Wrong format!");
                     out.flush();
                 }
-            }else if (this.host && messageFromClient.equals("start")){
-                GameLogic.start = true;
+            }else if (!GameLogic.start && this.host && messageFromClient.equals("start")){
+                out.println("GAME IS STARTED!");
+                out.flush();
+                Server.startGame();
+            }else if (checkEmoji(messageFromClient)){
+                sendMessageToAll("Client " + this.id + " : " + messageFromClient);
             }
             else {
                 out.println("Wrong format! or you are not the host! or the game is not start yet!");
@@ -60,7 +64,14 @@ public class ClientHandler implements Runnable {
 
         }
     }
-
+    public boolean checkEmoji(String msg){
+        if (msg.matches(".*[0-9].*")){
+            return false;
+        }else if (msg.split("").length > 2){
+            return false;
+        }
+        return true;
+    }
     public void sendMessage(String message) {
         out.println(message);
         out.flush();
@@ -70,7 +81,7 @@ public class ClientHandler implements Runnable {
         sendMessage("your cards : " + hands.toString());
     }
 
-    public void sendMessageToAll(String message){
+    public static void sendMessageToAll(String message){
         for (ClientHandler c :
                 Server.clientHandlers) {
             c.sendMessage(message);
@@ -81,6 +92,7 @@ public class ClientHandler implements Runnable {
             sendMessage("YOU PLAYED : " + i );
             sendMessageToAll("Player " + this.id + " Played : " + i);
             this.hands.remove((Object) i);
+            sendInfo();
         }else {
             out.println("you dont have that card!");
             out.flush();

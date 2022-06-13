@@ -1,5 +1,7 @@
 package Server;
 
+import Client.Client;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,11 +11,13 @@ import java.util.List;
 public class Server {
     static List<ClientHandler> clientHandlers;
     static int playersCount;
+
     public Server() {
-        playersCount = 1;
+        playersCount = 50;
         clientHandlers = new ArrayList<>();
         init();
     }
+
     public void init() {
         System.out.println("Server is running...");
         try {
@@ -24,26 +28,29 @@ public class Server {
                 System.out.println("====> There are " + clientHandlers.size() + " clients on the server!");
 
             }
-        }  catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     private void addNewClientHandler(Socket socket) throws IOException {
         ClientHandler clientHandler = new ClientHandler(clientHandlers.size(), socket);
-        if (!GameLogic.start && clientHandlers.size() < playersCount) { //todo
+        if (!GameLogic.start && clientHandlers.size() <= playersCount) { //todo
             System.out.println("New connection accepted!");
             clientHandlers.add(clientHandler);
             new Thread(clientHandler).start();
-        }else if (GameLogic.start){
-            startGame();
-        }
-        else {
+            if (clientHandlers.size() == playersCount){
+                startGame();
+            }
+        } else {
             //todo replace client with bot
             clientHandler.sendMessage("game has been started!");
         }
 
     }
-    public void startGame(){
+
+    public static void startGame() {
+        GameLogic.start = true;
         new GameLogic();
         for (ClientHandler c :
                 clientHandlers) {

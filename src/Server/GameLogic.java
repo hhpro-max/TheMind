@@ -32,6 +32,7 @@ public class GameLogic {
             for (int i = 0;i < levelCard;i++){
                 c.hands.add(cards.pop());
             }
+            Collections.sort(c.hands);
         }
     }
 
