@@ -7,19 +7,16 @@ import java.util.Scanner;
 
 public class Client implements Runnable{
 
+    Socket socket;
+    Client(){
 
+    }
     private void init() throws IOException {
-        Socket socket = new Socket("localhost", 8080);
-        PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-        Scanner scanner = new Scanner(socket.getInputStream());
-        Scanner scanner1 = new Scanner(System.in);
-        while (true) {
-            String messageToServer = scanner1.nextLine();
-            printWriter.println(messageToServer);
-            printWriter.flush();
-            String input = scanner.nextLine();
-            System.out.println("Message from server: " + input);
-        }
+        socket = new Socket("localhost", 8080);
+        ClientSender clientSender = new ClientSender(this);
+        ClientReceiver clientReceiver = new ClientReceiver(this);
+        new Thread(clientReceiver).start();
+        new Thread(clientSender).start();
     }
 
     @Override

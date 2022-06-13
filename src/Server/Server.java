@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private final List<ClientHandler> clientHandlers;
-
+    static List<ClientHandler> clientHandlers;
+    static int playersCount;
     public Server() {
+        playersCount = 1;
         clientHandlers = new ArrayList<>();
         init();
     }
@@ -18,7 +19,6 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             while (true) {
-                System.out.println("Waiting for a connection...");
                 Socket socket = serverSocket.accept();
                 addNewClientHandler(socket);
                 System.out.println("====> There are " + clientHandlers.size() + " clients on the server!");
@@ -30,13 +30,25 @@ public class Server {
     }
     private void addNewClientHandler(Socket socket) throws IOException {
         ClientHandler clientHandler = new ClientHandler(clientHandlers.size(), socket);
-        if (true) { //todo
+        if (!GameLogic.start && clientHandlers.size() < playersCount) { //todo
             System.out.println("New connection accepted!");
             clientHandlers.add(clientHandler);
             new Thread(clientHandler).start();
-
+        }else if (GameLogic.start){
+            startGame();
+        }
+        else {
+            //todo replace client with bot
+            clientHandler.sendMessage("game has been started!");
         }
 
+    }
+    public void startGame(){
+        new GameLogic();
+        for (ClientHandler c :
+                clientHandlers) {
+            c.sendInfo();
+        }
     }
 
 
