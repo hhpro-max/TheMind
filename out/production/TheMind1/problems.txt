@@ -1,0 +1,13 @@
+fix the issue of start function (the problem is when you send start word to the server it would not start till another client would join).
+
+         /
+checked\/
+
+
+add the use ninja function to this program and then continue from the dock!XD.
+
+         /
+checked\/
+
+fix the issue of host player when we have enough players on the server but the game would not start.
+
