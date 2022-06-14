@@ -37,5 +37,22 @@ public class GameLogic {
             Collections.sort(c.hands);
         }
     }
+    public static void startTheNewLevel(){
+        levelCard++;
+        playedCards.clear();
+        if (levelCard==3||levelCard==6||levelCard==9){
+            heartCard++;
+        }
+        if (levelCard==2||levelCard==5||levelCard==8){
+            ninjaCard++;
+        }
+        if (levelCard == 13){
+            ClientHandler.sendMessageToAll("     !<===>! YOU WON !<===>!  ");
+            ClientHandler.killAll();
+        }
+        initCards();
+        initClientHands();
+    }
+
 
 }

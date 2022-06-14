@@ -49,9 +49,24 @@ public class Server {
     }
 
     public static void startGame() {
+       /* List<ClientHandler> cs = new ArrayList<>(clientHandlers);
+        for (ClientHandler c:
+             cs) {
+            if (!c.isAlive()){
+                clientHandlers.remove(c);
+            }
+        }*/
+        while (clientHandlers.size()>playersCount){
+            clientHandlers.get(clientHandlers.size()-1).sendMessage("SORRY YOU ARE ADDITIONAL I HAVE TO REMOVE YOU BYE BYE !");
+            try {
+                clientHandlers.get(clientHandlers.size()-1).kill();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            clientHandlers.remove(clientHandlers.size()-1);
+        }
         GameLogic.start = true;
         new GameLogic();
-
         ClientHandler.sendInfoToAll();
     }
 
