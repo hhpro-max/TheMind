@@ -56,6 +56,16 @@ public class Server {
                 clientHandlers.remove(c);
             }
         }*/
+
+
+        /*
+        try {
+            Bot bot = new Bot(clientHandlers.size(),new Socket("localhost",8080));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("CAN NOT MAKE THAT BOT!");
+        }
+        */
         while (clientHandlers.size()>playersCount){
             clientHandlers.get(clientHandlers.size()-1).sendMessage("SORRY YOU ARE ADDITIONAL I HAVE TO REMOVE YOU BYE BYE !");
             try {

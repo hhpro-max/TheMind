@@ -48,10 +48,11 @@ public class ClientHandler implements Runnable {
                 }catch (Exception e){
                     if (order[1].equals("ninja")){
                         useNinjaCard();
-                        break;
+                    }else {
+                        e.printStackTrace();
+                        sendMessage("Wrong format ! (make sure that you entered the numeric format)");
                     }
-                    e.printStackTrace();
-                    sendMessage("Wrong format ! (make sure that you entered the numeric format)");
+
                 }
             }else if (!GameLogic.start && this.host && messageFromClient.equals("start")){
                 sendMessageToAll("GAME IS STARTED !");
@@ -183,21 +184,23 @@ public class ClientHandler implements Runnable {
     }
 
     public void useNinjaCard(){
-        Map<ClientHandler,Integer> map = new LinkedHashMap<>();
+
         if (GameLogic.ninjaCard>0){
-            sendMessageToAll("Player "+ this.id+ " <-> " + this.userName + " Used a ninja card !");
             GameLogic.ninjaCard--;
-            for (ClientHandler clientHandler:
-                 Server.clientHandlers) {
-                if (!clientHandler.hands.isEmpty()){
-                    map.put(clientHandler,clientHandler.hands.get(0));
+            sendMessageToAll("Player "+ this.id+ " <-> " + this.userName + " Used a ninja card !");
+            for (ClientHandler c :
+                    Server.clientHandlers) {
+                if (!c.hands.isEmpty()){
+                    GameLogic.playedCards.add(c.hands.get(0));
+                    c.hands.remove(0);
                 }
             }
-            map = sortByValue(map);
-            for (Map.Entry<ClientHandler,Integer> i:
-                 map.entrySet()) {
-                i.getKey().play(i.getValue());
+            Collections.sort(GameLogic.playedCards);
+            if (checkForNewRound()){
+                GameLogic.startTheNewLevel();
+                sendMessageToAll("!!!THE NEXT LEVEL IS STARTED!!!");
             }
+            sendInfoToAll();
         }else {
             sendMessage("YOU DONT HAVE NINJA CARD !!!");
         }
@@ -230,9 +233,6 @@ public class ClientHandler implements Runnable {
         sendMessageToAll("PLAYERS ARE READY ! WAITING FOR HOST !");
         for (ClientHandler c:
                 Server.clientHandlers) {
-            //
-            System.out.println(c.userName);
-            //
             if (c.host){
                 c.sendMessage("THE PLAYERS ARE READY DO YOU WANA START THE GAME ? (start)");
 
