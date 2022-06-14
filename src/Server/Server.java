@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
+    int port = 8080;
     static List<ClientHandler> clientHandlers;
     static int playersCount;
-
+    static Socket botsSocket;
     public Server() {
         playersCount = 9;
         clientHandlers = new ArrayList<>();
@@ -19,12 +20,26 @@ public class Server {
     }
 
     public void init() {
+        boolean firstTime = true;
         System.out.println("Server is running...");
         try {
-            ServerSocket serverSocket = new ServerSocket(8080);
+            ServerSocket serverSocket = new ServerSocket(port);
             while (true) {
-                Socket socket = serverSocket.accept();
-                addNewClientHandler(socket);
+                if (firstTime){
+                    try {
+                        botsSocket = new Socket("localhost",port);
+                        Socket socket = serverSocket.accept();
+                        System.out.println("BOTS SOCKET HAS BEEN MADE!");
+                        firstTime = false;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    clientHandlers.clear();
+                }else {
+                    Socket socket = serverSocket.accept();
+                    addNewClientHandler(socket);
+                }
+
                 System.out.println("====> There are " + clientHandlers.size() + " clients on the server!");
             }
         } catch (IOException e) {
@@ -56,16 +71,21 @@ public class Server {
                 clientHandlers.remove(c);
             }
         }*/
+        GameLogic.start = true;
 
 
-        /*
-        try {
-            Bot bot = new Bot(clientHandlers.size(),new Socket("localhost",8080));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("CAN NOT MAKE THAT BOT!");
+        while (clientHandlers.size()<playersCount){
+            try {
+                ClientHandler bot = new Bot(clientHandlers.size(),botsSocket);
+                new Thread(bot).start();
+                clientHandlers.add(bot);
+                System.out.println("BOT HAS BEEN MADE!");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("CAN NOT MAKE THAT BOT!");
+            }
         }
-        */
+
         while (clientHandlers.size()>playersCount){
             clientHandlers.get(clientHandlers.size()-1).sendMessage("SORRY YOU ARE ADDITIONAL I HAVE TO REMOVE YOU BYE BYE !");
             try {
@@ -75,7 +95,7 @@ public class Server {
             }
             clientHandlers.remove(clientHandlers.size()-1);
         }
-        GameLogic.start = true;
+
         new GameLogic();
         ClientHandler.sendInfoToAll();
     }

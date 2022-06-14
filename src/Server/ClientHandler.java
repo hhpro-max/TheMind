@@ -6,9 +6,9 @@ import java.net.Socket;
 import java.util.*;
 
 public class ClientHandler implements Runnable {
-    private final Socket socket;
-    private final PrintWriter out;
-    private final int id;
+    final Socket socket;
+    final PrintWriter out;
+    final int id;
     public String userName;
     List<Integer> hands;
     Scanner in;
@@ -31,7 +31,7 @@ public class ClientHandler implements Runnable {
         System.out.println("New ClientHandler is running...");
         sendMessage("ENTER YOUR USERNAME : ");
         userName = in.nextLine();
-        sendMessage("if you wana play a card you should write your message in this way : play-CARDNUMBER || play-ninja");
+        sendMessage("if you wana play a card you should write your message in this way : p-CARDNUMBER || p-ninja");
         sendMessage("You are client number " + id + " and your user name is : " + userName);
         if (this.id == 0){
             this.host = true;
@@ -128,7 +128,7 @@ public class ClientHandler implements Runnable {
 
     public boolean checkOrderFormat(String order){
         String[] orders = order.split("-");
-        if (orders.length == 2 && orders[0].equals("play")){
+        if (orders.length == 2 && orders[0].equals("p")){
             return true;
         }
         return false;
@@ -238,5 +238,8 @@ public class ClientHandler implements Runnable {
 
             }
         }
+    }
+    public int waitingStrategy(){
+        return 0;
     }
 }
