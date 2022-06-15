@@ -9,11 +9,13 @@ public class Client implements Runnable{
 
     Socket socket;
     private static String token;
+    int port = 8080;
+    String host = "localhost";
     Client(){
 
     }
     private void init() throws IOException {
-        socket = new Socket("localhost", 8080);
+        socket = new Socket(host, port);
         ClientSender clientSender = new ClientSender(this);
         ClientReceiver clientReceiver = new ClientReceiver(this);
         new Thread(clientReceiver).start();
