@@ -106,6 +106,37 @@ public class ClientHandler implements Runnable {
                 removeALife();
             }
             if (checkForNewRound()){
+                //todo
+                for (ClientHandler c:
+                        Server.waiters) {
+                    if (Server.clientHandlers.size() < 9 && Server.isThereAnyBotHere()){
+                        inerLoop:
+                        for (ClientHandler d:
+                             Server.clientHandlers) {
+                            if (d instanceof Bot){
+                                try {
+                                    d.kill();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    System.out.println("!!!ERROR!!! CAN NOT KILL THE BOT");
+                                }
+                                Server.clientHandlers.remove(d);
+                                Server.clientHandlers.add(c);
+                                break inerLoop;
+                            }
+                        }
+                    }else {
+                        c.sendMessage("SERVER IS FULL !");
+                        try {
+                            c.kill();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            System.out.println("!!!WARN!!! CAN NOT KILL THE USER");
+                        }
+                    }
+                }
+                Server.waiters.clear();
+                //
                 GameLogic.startTheNewLevel();
                 sendMessageToAll("!!!THE NEXT LEVEL IS STARTED!!!");
             }
