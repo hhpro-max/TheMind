@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Client implements Runnable{
 
     Socket socket;
+    private static String token;
     Client(){
 
     }
@@ -26,5 +27,13 @@ public class Client implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static void setToken(String token) {
+        Client.token = token;
     }
 }

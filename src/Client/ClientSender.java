@@ -19,7 +19,7 @@ public class ClientSender implements Runnable{
     public void run() {
         while (true){
            String msg = sendM.nextLine();
-           out.println(msg);
+           out.println(msg+":"+Client.getToken());
            out.flush();
         }
     }

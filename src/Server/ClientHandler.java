@@ -13,6 +13,9 @@ public class ClientHandler implements Runnable {
     List<Integer> hands;
     Scanner in;
     boolean host;
+    private String token;
+
+
 
     ClientHandler(int id, Socket socket) throws IOException {
         this.socket = socket;
@@ -31,6 +34,8 @@ public class ClientHandler implements Runnable {
         System.out.println("New ClientHandler is running...");
         sendMessage("ENTER YOUR USERNAME : ");
         userName = in.nextLine();
+        checkAuthToken(userName);
+        userName = userName.split(":")[0];
         sendMessage("if you wana play a card you should write your message in this way : p-CARDNUMBER || p-ninja");
         sendMessage("You are client number " + id + " and your user name is : " + userName);
         if (this.id == 0){
@@ -39,7 +44,9 @@ public class ClientHandler implements Runnable {
             defineCountOfPlayers();
         }
         while (true) {
-            String messageFromClient = in.nextLine();
+            String messageFromClient1 = in.nextLine();
+            checkAuthToken(messageFromClient1);
+            String messageFromClient = messageFromClient1.split(":")[0];
             System.out.println("Client "  + this.id + " <-> " + this.userName  + " : " + messageFromClient);
             if (checkOrderFormat(messageFromClient) && GameLogic.start){
                 String[] order = messageFromClient.split("-");
@@ -66,6 +73,19 @@ public class ClientHandler implements Runnable {
 
         }
     }
+
+    private void checkAuthToken(String str) {
+        String tokenC = str.split(":")[1];
+        if (!tokenC.equals(this.token)){
+            sendMessage("WRONG TOKEN!");
+            try {
+                this.kill();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public boolean checkEmoji(String msg){
         if (msg.matches(".*[0-9].*")){
             return false;
@@ -165,7 +185,9 @@ public class ClientHandler implements Runnable {
         return false;
     }
     public void defineCountOfPlayers(){
-        String playerCount = in.nextLine();
+        String playerCount1 = in.nextLine();
+        checkAuthToken(playerCount1);
+        String playerCount = playerCount1.split(":")[0];
         try {
             int number = Integer.parseInt(playerCount);
             if (number > 9 || number < 2){
@@ -272,5 +294,14 @@ public class ClientHandler implements Runnable {
     }
     public int waitingStrategy(){
         return 0;
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

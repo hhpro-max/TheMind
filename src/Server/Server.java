@@ -53,6 +53,9 @@ public class Server {
 
     private void addNewClientHandler(Socket socket) throws IOException {
         ClientHandler clientHandler = new ClientHandler(clientHandlers.size(), socket);
+        String token = AuthToken.generateNewToken();
+        clientHandler.setToken(token);
+        clientHandler.sendMessage("token:"+token);
         if (!GameLogic.start && clientHandlers.size() <= playersCount) { //todo
             System.out.println("New connection accepted!");
             clientHandlers.add(clientHandler);

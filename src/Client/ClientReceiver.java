@@ -14,6 +14,9 @@ public class ClientReceiver implements Runnable {
 
     @Override
     public void run() {
+        String[] token = in.nextLine().split(":");
+        Client.setToken(token[1]);
+        System.out.println( "YOUR TOKEN IS : " + Client.getToken() );
         while (true) {
             String input = in.nextLine();
             System.out.println("server : " + input);
