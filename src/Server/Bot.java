@@ -18,7 +18,7 @@ public class Bot extends ClientHandler{
         while (true) {
             if (GameLogic.start){
                 try {
-                    Thread.sleep(5000);//todo
+                    Thread.sleep(3000 + random.nextInt(5) * 1000 );//todo
                     Thread.sleep(waitingStrategy()* 1000L);
                     if (!hands.isEmpty()){
                         play(hands.get(0));
