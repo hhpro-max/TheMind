@@ -1,0 +1,26 @@
+fix the issue of start function (the problem is when you send start word to the server it would not start till another client would join).
+
+       /
+FIXED\/
+
+
+add the use ninja function to this program and then continue from the dock!XD.
+
+         /
+CHECKED\/
+
+fix the issue of host player when we have enough players on the server but the game would not start.
+
+       /
+FIXED\/
+
+now you should design the bots.
+
+         /
+CHECKED\/
+
+follow the dock and complete the function in the server to replace people instead of the bot.
+
+         /
+CHECKED\/
+
