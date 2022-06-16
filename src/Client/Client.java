@@ -28,6 +28,7 @@ public class Client implements Runnable{
             init();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("SERVER IS OFF!");
         }
     }
 

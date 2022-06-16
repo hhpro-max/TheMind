@@ -37,6 +37,7 @@ public class Server {
                         firstTime = false;
                     } catch (IOException e) {
                         e.printStackTrace();
+                        System.out.println(" ERR <-> !!! BOTS SOCKET HAS BEEN NOT MADE !!! ");
                     }
                     clientHandlers.clear();
                 } else {
